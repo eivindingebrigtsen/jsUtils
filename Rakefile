@@ -4,13 +4,18 @@ task :pack => [:lint, :strip] do
 # Removing compiled javascripts
   puts 'PACK'
   puts '################################################'
-  rm_rf('min')
-  mkdir_p('min')
+  if !File.exist?($target) then
+        mkdir_p($target)
+  end 
+  if File.exist?($target+'/'+$name) then
+    rm_rf($target+'/'+$name)
+  end
   js = []
   Dir['tmp/*'].each do |f|
     js.push `java -jar lib/yuicompressor-2.4.2.jar #{f}`
   end
-  File.open('min/'+$name+'.pack.js', 'w'){|io| io.write(js.join("\n"))}
+  File.open($target+'/'+$name, 'w'){|io| io.write(js.join("\n"))}
+  if !$save then rm_rf('tmp') end
 end
 
 desc 'strip console logs'
@@ -55,7 +60,7 @@ end
 
 desc "clean up"
 task :clean do
-  rm_rf('min')
+  rm_rf($target)
   rm_rf('tmp')
   rm_rf('lib/jsl.conf')
 end
