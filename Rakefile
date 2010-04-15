@@ -1,6 +1,7 @@
 require 'conf.rb'
 desc 'Pack all js into one file'
-task :pack => [:lint, :strip] do
+task :pack => [:strip] do
+  if $lint then sh('rake lint') end
 # Removing compiled javascripts
   if !File.exist?($target) then
         mkdir_p($target)
@@ -10,6 +11,10 @@ task :pack => [:lint, :strip] do
   end
   js = []
   Dir[$tmp+'/*'].each do |f|
+    if File.basename(f) =~ /(min\.|pack\.|compiled\.)/ then
+      puts 'Already packed:' + f
+      js.push File.read(f)
+    end
     puts f
     js.push `java -jar lib/yuicompressor-2.4.2.jar #{f}`
   end
@@ -22,7 +27,7 @@ task :strip do
   rm_rf($tmp)
   mkdir_p($tmp)
   Dir[$path+'/**/*.js'].each do |f|
-    next if File.directory?(f) || File.basename(f) =~ /(\.min|\.pack)/
+    next if File.directory?(f) || File.basename(f) =~ /(min\.|pack\.|compiled\.)/
     source = File.open(f, 'rb').read
     file = File.basename(f)
     puts 'Stripping '+file
@@ -33,11 +38,13 @@ end
 
 desc 'javascript lint'
 task :lint do  
-  if !File.exist?('lib/jsl.conf') ||  !File.open('lib/jsl.conf', 'rb').read.match($path) then    
-    source = File.open('lib/jsl.default.conf', 'rb').read
-    source += '+process '+$path+'/*.js'
-    File.open('lib/jsl.conf', 'w'){|io| io.write(source)}
-  end
+  source = File.open('lib/jsl.default.conf', 'rb').read
+  files = []
+  Dir[$path+'/**/*.js'].each do |f|
+    next if File.basename(f) =~ /(min\.|pack\.|compiled\.)/
+    files.push '+process '+ File.dirname(f) +'/'+File.basename(f)
+  end    
+  File.open('lib/jsl.conf', 'w'){|io| io.write(files.join("\n"))}
   sh('lib/jsl --conf lib/jsl.conf +recurse')
 end
 
