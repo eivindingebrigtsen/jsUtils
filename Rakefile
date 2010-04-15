@@ -66,10 +66,10 @@ task :clean do
 end
 
 desc "commit"
-task :git do |m|
+task :git do
   sh('rake clean')
   sh('git add .')
-  sh('git commit -m "#{m}"')
+  sh("git commit -m \"#{ENV['m']}\"")
   sh('git push origin master')
 end
 
