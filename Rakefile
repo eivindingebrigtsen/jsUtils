@@ -2,8 +2,6 @@ require 'conf.rb'
 desc 'Pack all js into one file'
 task :pack => [:lint, :strip] do
 # Removing compiled javascripts
-  puts 'PACK'
-  puts '################################################'
   if !File.exist?($target) then
         mkdir_p($target)
   end 
@@ -26,7 +24,7 @@ task :strip do
     next if File.directory?(f) 
     source = File.open(f, 'rb').read
     file = File.basename(f)
-    puts file
+    puts 'Stripping '+file
     stripped = source.gsub(/console\.(time|log|error|warn|info|assert|group|groupEnd|timeEnd|profile|trace|profileEnd|dir)(.*?)[\;\n]/, '')
     File.open('tmp/'+file, 'w'){|io| io.write(stripped)}  
   end
@@ -34,9 +32,6 @@ end
 
 desc 'javascript lint'
 task :lint do
-  puts '################################################'
-  puts 'JSLINT'
-  puts '################################################'
   if !File.exist?('lib/jsl.conf') then
     source = File.open('lib/jsl.default.conf', 'rb').read
     source += '+process '+$path+'/*.js'
@@ -47,9 +42,6 @@ end
 
 desc 'Create a zip'
 task :zip => :pack do
-  puts '################################################'
-  puts 'ZIP'
-  puts '################################################'
   sh("zip -r  "+$path)
 end
 
