@@ -64,3 +64,14 @@ task :clean do
   rm_rf('tmp')
   rm_rf('lib/jsl.conf')
 end
+
+desc "commit"
+task :git do |m|
+  sh('rake clean')
+  sh('git add .')
+  sh('git commit -m "#{m}"')
+  sh('git push origin master')
+end
+
+
+
