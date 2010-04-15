@@ -28,7 +28,7 @@ A small library of automated rake tasks that help my everyday working.
 		- strips console commands from files
 
 
-		rake commit m="commit message"
+		rake git m="commit message"
 		=========
 		- runs rake pack
 		- adds changes in git folder
