@@ -36,6 +36,24 @@ task :strip do
   end
 end
 
+ desc 'Replace Tabs with spaces'
+ task :tabs do
+   Dir[$path+'/**/*'].each do |f|
+     next if File.directory?(f) 
+     source = File.open(f, 'rb').read
+     case File.extname(f)
+     when '.js'
+       source.gsub!(/\t/, '  ')
+     when '.css'
+       source.gsub!(/\t/, '  ')
+     end
+     File.open("#{File.dirname(f)}/#{File.basename(f)}", 'wb') {|io| io.write(source)}
+   end
+ end
+
+
+
+
 desc 'javascript lint'
 task :lint do  
   source = File.open('lib/jsl.default.conf', 'rb').read

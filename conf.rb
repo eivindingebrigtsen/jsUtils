@@ -2,6 +2,7 @@
 $git = '~/Projects/jsUtils'
 # Relative path to your javascript files
 $path = '../storebrand/repo/webapp/src/main/webapp/js'
+$ignore = ['test']
 # Relative path to save minified file in
 $target = 'min' 
 # Relative path to save console stripped js files
@@ -14,3 +15,4 @@ $lint = false
 $name = 'jsUtils.min.js'
 #
 $scaffold = 'http://localhost/scaffold/index.php?f=/css/master.css'
+#
