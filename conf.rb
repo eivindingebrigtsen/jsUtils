@@ -12,3 +12,5 @@ $target = 'min'
 $lint = false
 # Name of your packed file
 $name = 'jsUtils.min.js'
+#
+$scaffold = 'http://localhost/scaffold/index.php?f=/css/master.css'

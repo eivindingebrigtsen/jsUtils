@@ -49,6 +49,20 @@ task :lint do
 end
 
 
+desc "Compile and copy css to minified folder"
+task :css do
+	require 'open-uri'
+	# Removing previously compiled css's
+	# Getting css from CSS Scaffold on local PHP server	
+	# Creating a new file and parsing the text
+  mkdir_p($target)
+	css = open($scaffold)		
+	file = File.open('webapp/src/main/webapp/css/min/master.css', 'w')
+	file.puts css.read
+end
+
+
+
 desc "clean up"
 task :clean do
   rm_rf($tmp)
